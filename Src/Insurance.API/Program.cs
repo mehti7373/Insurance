@@ -5,6 +5,7 @@ using Insurance.Infrastructure.Persistence;
 using Insurance.Infrastructure.Persistence.Repositories;
 using Insurance.Infrastructure.Security;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 //using Microsoft.EntityFrameworkCore.SqlServer;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,6 +26,12 @@ if (builder.Environment.IsDevelopment())
 //    builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 //}
+
+//builder.Services.AddSerilog();
+
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration));
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -42,6 +49,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+app.UseSerilogRequestLogging();
 
 app.MapControllers();
 
